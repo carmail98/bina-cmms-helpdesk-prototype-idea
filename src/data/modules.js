@@ -1,0 +1,38 @@
+import {
+  LayoutDashboard,
+  LifeBuoy,
+  Boxes,
+  CalendarClock,
+  ClipboardList,
+  Warehouse,
+  Truck,
+  ClipboardCheck,
+  ShieldCheck,
+  BarChart3,
+  LayoutGrid,
+  Zap,
+  CalendarCheck,
+  UserCheck,
+  FileText,
+  Settings,
+} from 'lucide-react';
+
+// All 16 modules for the sidebar. Only Helpdesk is active in this prototype.
+export const MODULES = [
+  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, active: false },
+  { id: 'helpdesk', label: 'Helpdesk', icon: LifeBuoy, active: true },
+  { id: 'asset', label: 'Asset Management', icon: Boxes, active: false },
+  { id: 'ppm', label: 'Preventive Maintenance', icon: CalendarClock, active: false },
+  { id: 'workorder', label: 'Work Order', icon: ClipboardList, active: false },
+  { id: 'inventory', label: 'Inventory', icon: Warehouse, active: false },
+  { id: 'vendor', label: 'Vendor / Contractor', icon: Truck, active: false },
+  { id: 'inspection', label: 'Inspection', icon: ClipboardCheck, active: false },
+  { id: 'compliance', label: 'Compliance', icon: ShieldCheck, active: false },
+  { id: 'reporting', label: 'Reporting', icon: BarChart3, active: false },
+  { id: 'space', label: 'Space Management', icon: LayoutGrid, active: false },
+  { id: 'energy', label: 'Energy', icon: Zap, active: false },
+  { id: 'booking', label: 'Booking', icon: CalendarCheck, active: false },
+  { id: 'visitor', label: 'Visitor', icon: UserCheck, active: false },
+  { id: 'document', label: 'Document', icon: FileText, active: false },
+  { id: 'settings', label: 'Settings', icon: Settings, active: false },
+];

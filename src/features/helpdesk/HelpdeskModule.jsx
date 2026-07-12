@@ -1,17 +1,37 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Topbar from '../../components/Topbar';
 import { Segmented } from '../../components/ui';
 import TicketList from './TicketList';
 import TicketDetail from './TicketDetail';
 import Reports from './Reports';
 import CreateTicketModal from './CreateTicketModal';
+import { useTour } from '../../context/TourContext';
 import { Plus } from 'lucide-react';
 
 export default function HelpdeskModule({ onOpenMobile }) {
   const [view, setView] = useState('inbox'); // inbox | reports
   const [selectedId, setSelectedId] = useState(null);
   const [createOpen, setCreateOpen] = useState(false);
+  const [createPrefill, setCreatePrefill] = useState(null);
+  const [reportTab, setReportTab] = useState('category');
   const [search, setSearch] = useState('');
+
+  const { registerControl } = useTour();
+
+  // Expose imperative navigation to the guided tour.
+  useEffect(() => {
+    registerControl({
+      setView,
+      openTicket: (id) => setSelectedId(id),
+      closeTicket: () => setSelectedId(null),
+      openCreate: (prefill) => {
+        setCreatePrefill(prefill || null);
+        setCreateOpen(true);
+      },
+      closeCreate: () => setCreateOpen(false),
+      setReportTab,
+    });
+  }, [registerControl]);
 
   const inDetail = !!selectedId;
 
@@ -60,10 +80,17 @@ export default function HelpdeskModule({ onOpenMobile }) {
       ) : view === 'inbox' ? (
         <TicketList search={search} onOpenTicket={setSelectedId} onNewTicket={() => setCreateOpen(true)} />
       ) : (
-        <Reports onOpenTicket={setSelectedId} />
+        <Reports onOpenTicket={setSelectedId} report={reportTab} onReportChange={setReportTab} />
       )}
 
-      <CreateTicketModal open={createOpen} onClose={() => setCreateOpen(false)} />
+      <CreateTicketModal
+        open={createOpen}
+        demoPrefill={createPrefill}
+        onClose={() => {
+          setCreateOpen(false);
+          setCreatePrefill(null);
+        }}
+      />
     </>
   );
 }

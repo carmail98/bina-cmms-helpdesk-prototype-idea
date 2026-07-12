@@ -1,8 +1,10 @@
-import { Menu, Moon, Sun, Search } from 'lucide-react';
+import { Menu, Moon, Sun, Search, Sparkles } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { useTour } from '../context/TourContext';
 
 export default function Topbar({ title, subtitle, onOpenMobile, actions, search }) {
   const { dark, toggleDark } = useApp();
+  const { start: startTour } = useTour();
   return (
     <header className="sticky top-0 z-20 mb-6">
       <div className="glass flex items-center gap-3 rounded-2xl px-4 py-3">
@@ -30,6 +32,16 @@ export default function Topbar({ title, subtitle, onOpenMobile, actions, search 
         )}
 
         {actions}
+
+        <button
+          onClick={startTour}
+          data-tour="start-tour"
+          className="btn-primary h-9 text-sm"
+          title="Mula panduan berpandu"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span className="hidden sm:inline">Mula Panduan</span>
+        </button>
 
         <button className="btn-soft h-9 w-9 !px-0" onClick={toggleDark} aria-label="Tukar tema">
           {dark ? <Sun className="h-[18px] w-[18px]" /> : <Moon className="h-[18px] w-[18px]" />}

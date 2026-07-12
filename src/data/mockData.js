@@ -109,6 +109,9 @@ export const assetsByCategory = (categoryId, building) =>
 export const STATUSES = ['New', 'Assigned', 'In Progress', 'Resolved', 'Closed'];
 export const PRIORITIES = ['Low', 'Medium', 'High', 'Critical'];
 
+// Deterministic ticket used by the guided demo tour (fixed narrative: HVAC, Blok G).
+export const DEMO_TICKET_ID = 'demo-hvac-ktpc';
+
 // SLA target (hours) by priority
 export const SLA_HOURS = { Low: 72, Medium: 24, High: 8, Critical: 4 };
 

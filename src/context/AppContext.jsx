@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { INITIAL_TICKETS, categoryById } from '../data/mockData';
+import { INITIAL_TICKETS, categoryById, NOW, DEMO_TICKET_ID } from '../data/mockData';
 
 const AppContext = createContext(null);
 
@@ -62,6 +62,67 @@ export function AppProvider({ children }) {
     setTickets((prev) => prev.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   }, []);
 
+  // ---- guided demo tour helpers (deterministic ticket lifecycle) -------------
+  const DEMO_BASE_MS = NOW.getTime() - 2 * 3600 * 1000; // "created" 2h before NOW
+
+  const resetDemo = useCallback(() => {
+    setTickets((prev) => prev.filter((t) => !t.isDemo));
+  }, []);
+
+  const createDemoTicket = useCallback(() => {
+    setTickets((prev) => {
+      const cleaned = prev.filter((t) => !t.isDemo);
+      const demo = {
+        id: DEMO_TICKET_ID,
+        refNo: 'HD-2026-0199',
+        title: 'Aircond tidak sejuk di Dewan Bedah',
+        categoryId: 'hvac',
+        categoryName: 'HVAC / Aircond',
+        assetId: 'a08',
+        assetName: 'AHU Dewan Bedah',
+        assetFreeText: '',
+        building: 'Blok G – Dewan Bedah',
+        description:
+          'Suhu Dewan Bedah meningkat, aircond tidak sejuk. Mohon pemeriksaan segera untuk elak gangguan operasi pembedahan.',
+        status: 'New',
+        priority: 'High',
+        reportedBy: 'Unit Dewan Bedah',
+        assignedTo: null,
+        createdAt: new Date(DEMO_BASE_MS).toISOString(),
+        assignedAt: null,
+        resolvedAt: null,
+        closedAt: null,
+        slaHours: 8,
+        slaBreached: false,
+        isDemo: true,
+      };
+      return [demo, ...cleaned];
+    });
+    return DEMO_TICKET_ID;
+  }, [DEMO_BASE_MS]);
+
+  const advanceDemoTicket = useCallback(
+    (stage) => {
+      const patches = {
+        assign: {
+          status: 'Assigned',
+          assignedTo: 't2', // Nurul Izzati (HVAC)
+          assignedAt: new Date(DEMO_BASE_MS + 30 * 60000).toISOString(),
+        },
+        progress: { status: 'In Progress' },
+        resolve: {
+          status: 'Resolved',
+          resolvedAt: new Date(DEMO_BASE_MS + 3 * 3600 * 1000).toISOString(),
+          slaBreached: false,
+        },
+        close: { status: 'Closed', closedAt: new Date(DEMO_BASE_MS + 4 * 3600 * 1000).toISOString() },
+      };
+      const patch = patches[stage];
+      if (patch) updateTicket(DEMO_TICKET_ID, patch);
+    },
+    [DEMO_BASE_MS, updateTicket]
+  );
+
   // ---- comments (in-memory) -------------------------------------------------
   const [comments, setComments] = useState({}); // { ticketId: [{text, at, by}] }
 
@@ -93,6 +154,10 @@ export function AppProvider({ children }) {
     addComment,
     toast,
     showToast,
+    // demo tour
+    resetDemo,
+    createDemoTicket,
+    advanceDemoTicket,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

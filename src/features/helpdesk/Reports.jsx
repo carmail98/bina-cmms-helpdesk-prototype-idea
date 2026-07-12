@@ -26,9 +26,11 @@ const STATUS_COLORS = {
   Closed: '#64748b',
 };
 
-export default function Reports({ onOpenTicket }) {
+export default function Reports({ onOpenTicket, report: reportProp, onReportChange }) {
   const { tickets, showToast } = useApp();
-  const [report, setReport] = useState('category');
+  const [reportState, setReportState] = useState('category');
+  const report = reportProp ?? reportState;
+  const setReport = onReportChange ?? setReportState;
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
 
@@ -56,7 +58,9 @@ export default function Reports({ onOpenTicket }) {
     <div className="space-y-6">
       {/* controls */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Segmented options={reports} value={report} onChange={setReport} />
+        <div data-tour="reports-tabs">
+          <Segmented options={reports} value={report} onChange={setReport} />
+        </div>
         <div className="flex flex-wrap items-center gap-2">
           <input type="date" className="input w-auto" value={fromDate} onChange={(e) => setFromDate(e.target.value)} />
           <span className="text-slate-400">—</span>
@@ -79,17 +83,19 @@ export default function Reports({ onOpenTicket }) {
         {scoped.length} aduan dalam julat tarikh dipilih
       </div>
 
-      {report === 'category' && <ReportCategory scoped={scoped} onExport={exportCsv} onOpenTicket={onOpenTicket} />}
-      {report === 'statusBuilding' && <ReportStatusBuilding scoped={scoped} onExport={exportCsv} />}
-      {report === 'sla' && <ReportSla scoped={scoped} onExport={exportCsv} />}
-      {report === 'others' && <ReportOthers scoped={scoped} onExport={exportCsv} onOpenTicket={onOpenTicket} />}
+      <div data-tour="reports-panel">
+        {report === 'category' && <ReportCategory scoped={scoped} onExport={exportCsv} onOpenTicket={onOpenTicket} />}
+        {report === 'statusBuilding' && <ReportStatusBuilding scoped={scoped} onExport={exportCsv} />}
+        {report === 'sla' && <ReportSla scoped={scoped} onExport={exportCsv} />}
+        {report === 'others' && <ReportOthers scoped={scoped} onExport={exportCsv} onOpenTicket={onOpenTicket} />}
+      </div>
     </div>
   );
 }
 
 function ExportBtn({ onClick }) {
   return (
-    <button className="btn-soft text-xs" onClick={onClick}>
+    <button className="btn-soft text-xs" onClick={onClick} data-tour="report-export">
       <Download className="h-3.5 w-3.5" /> Export
     </button>
   );

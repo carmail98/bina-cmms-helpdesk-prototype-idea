@@ -122,7 +122,7 @@ export default function TicketDetail({ ticketId, onBack }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-tour="ticket-detail">
       {/* header */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button className="btn-soft" onClick={onBack}>
@@ -167,7 +167,7 @@ export default function TicketDetail({ ticketId, onBack }) {
           </GlassCard>
 
           {/* Timeline */}
-          <GlassCard className="p-6">
+          <GlassCard className="p-6" data-tour="tour-timeline">
             <h3 className="mb-5 text-sm font-semibold text-slate-700 dark:text-slate-200">Log Aktiviti</h3>
             <ol className="relative space-y-5 border-l border-slate-200/70 dark:border-white/10 pl-6">
               {timeline.map((e, i) => {
@@ -215,13 +215,13 @@ export default function TicketDetail({ ticketId, onBack }) {
         {/* Right: actions + SLA */}
         <div className="space-y-6">
           {/* SLA */}
-          <GlassCard className="p-6">
+          <GlassCard className="p-6" data-tour="tour-sla">
             <h3 className="mb-4 text-sm font-semibold text-slate-700 dark:text-slate-200">SLA</h3>
             <SlaMeter ticket={ticket} sla={sla} />
           </GlassCard>
 
           {/* Assign */}
-          <GlassCard className="p-6">
+          <GlassCard className="p-6" data-tour="tour-assign">
             <h3 className="mb-1 flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
               <User className="h-4 w-4" /> Tugasan
             </h3>
@@ -244,7 +244,7 @@ export default function TicketDetail({ ticketId, onBack }) {
           </GlassCard>
 
           {/* Status actions */}
-          <GlassCard className="p-6">
+          <GlassCard className="p-6" data-tour="tour-status">
             <h3 className="mb-3 flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
               <Clock3 className="h-4 w-4" /> Tukar Status
             </h3>

@@ -51,7 +51,7 @@ export default function TicketList({ search, onOpenTicket, onNewTicket }) {
   return (
     <div className="space-y-6">
       {/* Stat cards */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4" data-tour="stat-cards">
         <StatCard label="Jumlah Aduan" value={stats.total} icon={TicketIcon} tone="accent" sub="Keseluruhan rekod" />
         <StatCard label="Aktif / Terbuka" value={stats.open} icon={Clock} tone="amber" sub="Belum selesai" />
         <StatCard label="Selesai" value={stats.resolved} icon={CheckCircle2} tone="emerald" sub="Resolved + Closed" />
@@ -60,7 +60,7 @@ export default function TicketList({ search, onOpenTicket, onNewTicket }) {
 
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2" data-tour="filter-toolbar">
           <button
             className={classNames('btn-soft', activeFilterCount && 'ring-2 ring-accent-400/40')}
             onClick={() => setShowFilters((s) => !s)}
@@ -82,7 +82,7 @@ export default function TicketList({ search, onOpenTicket, onNewTicket }) {
             {filtered.length} daripada {tickets.length} aduan
           </span>
         </div>
-        <button className="btn-primary" onClick={onNewTicket}>
+        <button className="btn-primary" onClick={onNewTicket} data-tour="new-aduan-btn">
           <Plus className="h-4 w-4" />
           Aduan Baru
         </button>
@@ -132,7 +132,7 @@ export default function TicketList({ search, onOpenTicket, onNewTicket }) {
       )}
 
       {/* Table */}
-      <div className="surface overflow-hidden rounded-2xl">
+      <div className="surface overflow-hidden rounded-2xl" data-tour="inbox-table">
         {filtered.length === 0 ? (
           <EmptyState icon={Inbox} title="Tiada aduan sepadan" description="Cuba ubah penapis atau kata carian." />
         ) : (
@@ -157,8 +157,12 @@ export default function TicketList({ search, onOpenTicket, onNewTicket }) {
                   return (
                     <tr
                       key={t.id}
+                      data-tour={t.isDemo ? 'demo-ticket-row' : undefined}
                       onClick={() => onOpenTicket(t.id)}
-                      className="group cursor-pointer border-b border-slate-100 last:border-0 transition hover:bg-accent-500/5 dark:border-white/5"
+                      className={classNames(
+                        'group cursor-pointer border-b border-slate-100 last:border-0 transition hover:bg-accent-500/5 dark:border-white/5',
+                        t.isDemo && 'bg-accent-500/[0.06]'
+                      )}
                     >
                       <td className="px-5 py-3.5">
                         <div className="flex items-center gap-2 font-medium text-slate-700 dark:text-slate-200">

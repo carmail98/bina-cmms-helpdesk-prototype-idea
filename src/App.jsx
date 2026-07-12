@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
+import { TourProvider } from './context/TourContext';
 import Sidebar from './components/Sidebar';
 import HelpdeskModule from './features/helpdesk/HelpdeskModule';
 import { Toast } from './components/ui';
+import TourOverlay from './components/TourOverlay';
+import WelcomeBanner from './components/WelcomeBanner';
 
 function Shell() {
   const { toast } = useApp();
@@ -25,6 +28,8 @@ function Shell() {
       </main>
 
       <Toast toast={toast} />
+      <WelcomeBanner />
+      <TourOverlay />
     </div>
   );
 }
@@ -32,7 +37,9 @@ function Shell() {
 export default function App() {
   return (
     <AppProvider>
-      <Shell />
+      <TourProvider>
+        <Shell />
+      </TourProvider>
     </AppProvider>
   );
 }

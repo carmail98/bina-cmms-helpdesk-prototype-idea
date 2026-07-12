@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Modal } from '../../components/ui';
 import { CATEGORIES, BUILDINGS, PRIORITIES, SLA_HOURS, assetsByCategory, categoryById } from '../../data/mockData';
 import { useApp } from '../../context/AppContext';
@@ -7,7 +7,7 @@ import { Info } from 'lucide-react';
 
 const FREE_TEXT_OPTION = '__freetext__';
 
-export default function CreateTicketModal({ open, onClose }) {
+export default function CreateTicketModal({ open, onClose, demoPrefill }) {
   const { addTicket, showToast } = useApp();
 
   const [categoryId, setCategoryId] = useState('');
@@ -18,6 +18,21 @@ export default function CreateTicketModal({ open, onClose }) {
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('Medium');
   const [errors, setErrors] = useState({});
+
+  // Initialise / reset the form each time the modal opens (supports the guided
+  // tour's deterministic prefill; a plain open starts blank).
+  useEffect(() => {
+    if (!open) return;
+    const p = demoPrefill || {};
+    setCategoryId(p.categoryId || '');
+    setBuilding(p.building || '');
+    setAssetChoice(p.assetChoice || '');
+    setAssetFreeText(p.assetFreeText || '');
+    setTitle(p.title || '');
+    setDescription(p.description || '');
+    setPriority(p.priority || 'Medium');
+    setErrors({});
+  }, [open, demoPrefill]);
 
   const isOthers = categoryId === 'others';
 
@@ -102,7 +117,7 @@ export default function CreateTicketModal({ open, onClose }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Category */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <div>
+          <div data-tour="field-kategori">
             <label className="label">Kategori *</label>
             <select
               className={classNames('input', errors.categoryId && 'ring-2 ring-rose-400/60')}
@@ -120,7 +135,7 @@ export default function CreateTicketModal({ open, onClose }) {
           </div>
 
           {/* Building */}
-          <div>
+          <div data-tour="field-bangunan">
             <label className="label">Bangunan *</label>
             <select
               className={classNames('input', errors.building && 'ring-2 ring-rose-400/60')}
@@ -143,7 +158,7 @@ export default function CreateTicketModal({ open, onClose }) {
 
         {/* Asset cascading OR free text */}
         {!isOthers && categoryId && (
-          <div>
+          <div data-tour="field-aset">
             <label className="label">
               Aset {cat ? `(${cat.name})` : ''} *
             </label>
@@ -213,7 +228,7 @@ export default function CreateTicketModal({ open, onClose }) {
         </div>
 
         {/* Priority */}
-        <div>
+        <div data-tour="field-priority">
           <label className="label">Keutamaan (Priority)</label>
           <div className="flex flex-wrap gap-2">
             {PRIORITIES.map((p) => (
